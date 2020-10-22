@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gf.dao.DeptMapper">
+	<resultMap type="dept" id="deptFields">
+		<id column="id" property="id" />
+		<result column="dept_name" property="deptName" />
+	</resultMap>
+	<resultMap type="dept" id="deptUser" extends="deptFields">
+		<collection fetchType="lazy" property="users" column="id"
+			select="com.gf.dao.UserMapper.findUserByDeptId">
+		</collection>
+	</resultMap>
+	<resultMap type="dept" id="deptUserResult" extends="deptFields">
+		<collection property="users" resultMap="com.gf.dao.UserMapper.userFields">
+		</collection>
+	</resultMap>
+
+	<select id="selectByIdForResultMap" resultMap="deptFields">
+		select * from
+		s_dept where id=#{id}
+	</select>
+
+	<select id="findoneMany" parameterType="int" resultMap="deptUser">
+		select *
+		from s_dept where id=#{id}
+	</select>
+
+	<select id="findoneManyResult" parameterType="int" resultMap="deptUserResult">
+		select *
+		from s_dept dept,s_user user
+		where dept.id=#{id} and user.dept_id = dept.id
+	</select>
+</mapper>

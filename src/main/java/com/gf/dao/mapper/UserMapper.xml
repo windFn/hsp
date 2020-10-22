@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gf.dao.UserMapper">
+	<resultMap type="user" id="userFields">
+		<!-- <constructor>
+			<idArg column="s_id" javaType="Integer"/>
+			<arg column="s_age" javaType="Integer"/>
+			<arg column="s_name" javaType="string"/>
+			<arg column="birthday" javaType="Date"/>
+		</constructor> -->
+		<id column="s_id" property="id" />
+		<result column="s_age" property="age" />
+		<result column="s_name" property="name" />
+		<result column="birthday" property="birthday" />
+		<result column="s_sex" property="sex" />
+	</resultMap>
+	
+	<resultMap type="user" id="userDept" extends="userFields">
+		<association fetchType="lazy" property="dept" column="dept_id" select="com.gf.dao.DeptMapper.selectByIdForResultMap" />
+	</resultMap>
+	
+	<resultMap type="user" id="userRoles" extends="userFields">
+		<collection fetchType="lazy" property="roles" column="s_id" select="com.gf.dao.UserRoleMapper.selectRoleByUserId" />
+	</resultMap>
+	
+	<resultMap type="user" id="userDisCard">
+		<discriminator javaType="string" column="s_sex">
+			<case value="0" resultMap="userDept">
+			</case>
+			<case value="1" resultMap="userRoles">
+			</case>
+		</discriminator>
+	</resultMap>
+	
+	<select id="selectByIdForResultType" parameterType="int" resultType="User">
+		select * from s_user where s_id = #{id}
+	</select>
+
+	<select id="selectByIdForResultMap" parameterType="int" resultMap="userFields">
+		select * from s_user where s_id = #{id}
+	</select>
+	
+	<insert id="insertUser" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+		<!-- <selectKey keyProperty="id" order="AFTER" resultType="int">
+			SELECT LAST_INSERT_ID()
+		</selectKey> -->
+		insert into s_user(s_age,s_name,birthday)
+		values(#{age},#{name},#{birthday})
+	</insert>
+	
+	<insert id="insertUserBatch" parameterType="list">
+		insert into s_user(s_age,s_name,birthday,dept_id)
+		values
+		<foreach collection="list" separator="," item="user">
+			(#{user.age},#{user.name},#{user.birthday},#{user.dept.id})
+		</foreach>
+	</insert>
+	
+	<delete id="deleteUserByName" parameterType="string" >
+		delete from s_user where s_name = #{name}
+	</delete>
+	
+	<update id="updateUser" parameterType="user" >
+		update s_user
+		<set>
+			<if test="age!=null">
+				s_age=#{age},
+			</if>
+			<if test="name!=null and name!=''">
+				s_name=#{name},
+			</if>
+			<if test="birthday!=null">
+				birthday=#{birthday},
+			</if>
+		</set>
+		<where>
+			and s_id=#{id}
+		</where>
+	</update>
+	
+	<select id="findOneOne" resultMap="userDept">
+		select * from S_USER where s_id=#{id}
+		and s_name like CONCAT('%',#{name},'%')
+	</select>
+	
+	<select id="findUserByDeptId" parameterType="int" resultMap="userFields">
+		select * from s_user where dept_id=#{deptId}
+	</select>
+	
+	<select id="disCardFind" parameterType="int" resultMap="userDisCard">
+		select * from s_user where s_id=#{id}
+	</select>
+</mapper>
