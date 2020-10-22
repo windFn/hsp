@@ -22,7 +22,7 @@ public class OrderController {
 	public Product getOrder(){
 		List<String> productServices = items.getProductServices();
 		String url = RandomChoseUtil.choseRandom(productServices);
-		Product postForObject = restTemplate.postForObject(url+"/product/getProduct", null, Product.class);
+		Product postForObject = restTemplate.postForObject("http://"+url+"/hsp/product/getProduct", null, Product.class);
 		return postForObject;
 	}
 }

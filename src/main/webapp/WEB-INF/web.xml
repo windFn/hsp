@@ -53,7 +53,4 @@
     <servlet-name>dispatcherServlet</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
-  <listener>
-    <listener-class>com.gf.listener.OrderRegistlistener</listener-class>
-  </listener>
 </web-app>
