@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gf.zkUtil.ZkClientUtil;
-import com.gf.zkUtil.ZkPath;
+import com.gf.zkUtil.bean.ZkPath;
 
 @Component
 public class RestCallItem {
