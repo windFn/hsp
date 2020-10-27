@@ -7,9 +7,8 @@ import org.junit.Test;
 
 import common.BaseTest;
 
-public class ZkClientLockTest extends BaseTest{
+public class ZkHighClientLockTest extends BaseTest{
 	int i = 0;
-	
 	@Test
 	public void testLock() throws Exception {
 		long start = System.currentTimeMillis();
@@ -18,7 +17,7 @@ public class ZkClientLockTest extends BaseTest{
 		String lockPath = "/lock";
 		for(int j=0; j<num;j++){
 			new Thread(()->{
-				ZkClientLock zkLock = ctx.getBean(ZkClientLock.class);
+				ZkHighClientLock zkLock = ctx.getBean(ZkHighClientLock.class);
 				zkLock.lock(lockPath);
 				i++;
 				try {
@@ -34,15 +33,5 @@ public class ZkClientLockTest extends BaseTest{
 		System.out.println("************"+i+"******************");
 		System.out.println(System.currentTimeMillis() - start);
 	}
-	
-	@Test
-	public void testTryLock(){
-		String lockPath = "/lock";
-		ZkClientLock zkLock = ctx.getBean(ZkClientLock.class);
-		System.out.println(1111111111);
-		boolean tryLock = zkLock.tryLock(lockPath,TimeUnit.SECONDS,10L);
-		System.out.println(tryLock);
-		System.out.println(222222222);
-		zkLock.unLock();
-	}
+
 }

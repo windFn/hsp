@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component;
 
 import com.gf.zkUtil.bean.ZkConfigBean;
 
+
+/**
+ * <p>Description: zkclient工具</p> 
+ * @author ganF
+ * @date 2020-10-27
+ */
 @Component
 public class ZkClientUtil {
 	@Autowired
@@ -94,13 +100,13 @@ public class ZkClientUtil {
 	 * @param ifNullCreateParent 是否需要创建父节点
 	 * @param data
 	 */
-	public void createEphemeralSequentialNode(ZkClient client,String path,boolean ifNullCreateParent,Object data){
+	public String createEphemeralSequentialNode(ZkClient client,String path,boolean ifNullCreateParent,Object data){
 		int index = -1;
 		if(ifNullCreateParent && (index = path.indexOf("/",1)) > 0){
 			String parentPath = path.substring(0,index);
 			client.createPersistent(parentPath, true);
 		}
-		client.createEphemeralSequential(path, data);
+		return client.createEphemeralSequential(path, data);
 	}
 	
 	/**
@@ -132,4 +138,25 @@ public class ZkClientUtil {
 	public boolean existNode(ZkClient client,String path){
 		return client.exists(path);
 	}
+	
+	/**
+	 * 删除节点path
+	 * @param client
+	 * @param path
+	 * @return
+	 */
+	public boolean removeNode(ZkClient client,String path){
+		return client.delete(path);
+	}
+	
+	/**
+	 * 删除包含子节点的path节点
+	 * @param client
+	 * @param path
+	 * @return
+	 */
+	public boolean removeNodeHaveChild(ZkClient client,String path){
+		return client.deleteRecursive(path);
+	}
+	
 }

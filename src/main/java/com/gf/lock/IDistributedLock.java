@@ -2,10 +2,11 @@ package com.gf.lock;
 
 import java.util.concurrent.TimeUnit;
 
+
 /**
- * 分布式锁接口
- * @author Administrator
- *
+ * <p>Description: 分布式锁接口定义</p> 
+ * @author ganF
+ * @date 2020-10-27
  */
 public interface IDistributedLock {
 	default void lock(String lockPath){

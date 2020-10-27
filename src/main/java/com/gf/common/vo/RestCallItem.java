@@ -6,13 +6,19 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.I0Itec.zkclient.ZkClient;
-import org.apache.zookeeper.ZKUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gf.zkUtil.ZkClientUtil;
 import com.gf.zkUtil.bean.ZkPath;
 
+/**
+ * <p>Description: 可用接口服务 
+ * 初始化远程接口,可调用节点(在zk中注册了则表示改接口服务可用),监听节点的变化
+ * </p> 
+ * @author ganF
+ * @date 2020-10-27
+ */
 @Component
 public class RestCallItem {
 	@Autowired

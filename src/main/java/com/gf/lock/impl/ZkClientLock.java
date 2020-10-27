@@ -13,6 +13,15 @@ import org.springframework.stereotype.Component;
 import com.gf.lock.IDistributedLock;
 import com.gf.zkUtil.ZkClientUtil;
 
+
+/**
+ * <p>Description: zkclient临时节点实现分布式锁(低效率)
+ *    如果节点创建成功，则获取锁成功，否则监听节点的状态
+ *    如果节点删除，所有client均重新竞争锁
+ * </p> 
+ * @author ganF
+ * @date 2020-10-27
+ */
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ZkClientLock implements IDistributedLock{
@@ -35,15 +44,16 @@ public class ZkClientLock implements IDistributedLock{
 
 	@Override
 	public void unLock() {
-		if(client != null)
-			client.close();
+		if(client != null){
+			clientUtil.closeClient(client);
+		}
 	}
 	
 	@Override
 	public void waitLock(String lockPath, TimeUnit unit, Long timeOut) {
 		CountDownLatch countDownLatch = new CountDownLatch(1);
 		IZkChildListener listener = (parentPath,currentChilds)->{
-			if(currentChilds == null){
+			if(currentChilds == null){//当前节点已删除
 				countDownLatch.countDown();
 			}
 		};

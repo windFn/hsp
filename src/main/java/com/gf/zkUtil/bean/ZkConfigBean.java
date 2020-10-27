@@ -4,6 +4,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+/**
+ * <p>Description: zk连接参数实体</p> 
+ * @author ganF
+ * @date 2020-10-27
+ */
 @Component
 @PropertySource("classpath:zkConfig.properties")
 public class ZkConfigBean {
